@@ -1,179 +1,97 @@
-# Inventory Management System
+Inventory Management System
+An Inventory Management System built with Spring Boot, JPA, and MySQL to handle the management of products, categories, and inventory stocks. The application provides CRUD operations for managing categories, products, and stock levels within the inventory.
 
-## Project Overview
-This project is an Inventory Management System built using Spring Boot. The system integrates with a MySQL database and exposes REST APIs for managing products, categories, and inventory stock levels. The project includes Swagger for API documentation.
+Features
+Category Management: Create, read, and delete product categories.
+Product Management: Add, view, and remove products, including assigning categories and managing inventory.
+Inventory Management: Update stock levels by adding or deducting quantities for each product.
+REST API: Exposes various endpoints to interact with the system, such as fetching product lists, managing categories, and adjusting inventory stocks.
+Technologies Used
+Spring Boot: A Java-based framework for building RESTful APIs.
+Spring Data JPA: Provides integration with relational databases and simplifies CRUD operations.
+Hibernate: ORM for mapping Java objects to database tables.
+MySQL: A relational database for storing categories, products, and inventory data.
+Swagger/OpenAPI: API documentation and testing tool.
+HikariCP: Connection pooling for efficient database management.
+Prerequisites
+Before running the application, ensure that you have the following software installed:
 
-## Entities
+Java 17+
+MySQL
+Maven (for building the project)
+Setup
+1. Clone the repository
+bash
+Copy code
+git clone https://github.com/yourusername/inventory-management.git
+cd inventory-management
+2. Configure MySQL Database
+Make sure you have a MySQL database running on your machine. Create a new database (e.g., inventory_db) and note down the credentials.
 
-### Product
-- Tracks information about individual items in inventory.
+3. Configure the application properties
+Edit the src/main/resources/application.properties file and provide your database connection details:
 
-### Category
-- Groups related products (e.g., Electronics, Groceries).
+properties
+Copy code
+spring.datasource.url=jdbc:mysql://localhost:3306/inventory_db
+spring.datasource.username=root
+spring.datasource.password=your_password
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+spring.jpa.hibernate.ddl-auto=update
+4. Build the project
+Run the following command to build the project using Maven:
 
-### Inventory
-- Tracks stock levels for products.
+bash
+Copy code
+mvn clean install
+5. Run the application
+Start the Spring Boot application by running:
 
-## Relationships
-- A Category can have multiple Products.
-- Each Product is associated with a single Category.
+bash
+Copy code
+mvn spring-boot:run
+The application will start on http://localhost:8080.
 
-## Features
+6. API Endpoints
+The following endpoints are available for interacting with the system:
 
-### CRUD Operations
-- Create, Read, Update, and Delete for Product and Category.
+GET /api/categories: Retrieve all categories.
 
-### Inventory Management
-- Add stock for a product.
-- Deduct stock for a product (with quantity validation).
-- Check stock levels.
+GET /api/categories/{id}: Retrieve a category by ID.
 
-### Search and Filter
-- Filter products by Category.
-- Search products by name.
+POST /api/categories: Create a new category.
 
-### Reports
-- Generate a report of low-stock products (e.g., stock < 10).
+DELETE /api/categories/{id}: Delete a category by ID.
 
-### Validation
-- Validate inputs using `javax.validation` annotations.
+GET /api/products: Retrieve all products.
 
-## Spring Boot Dependencies
-- **Spring Web**: For RESTful API.
-- **Spring Data JPA**: For database interaction.
-- **MySQL Driver**: For MySQL integration.
-- **Validation**: For input validation.
-- **Spring Boot DevTools** (optional): For rapid development.
-- **Swagger**: For API documentation.
+GET /api/products/{id}: Retrieve a product by ID.
 
-## Getting Started
+POST /api/products: Create a new product.
 
-### Prerequisites
-- Java 11 or higher
-- Maven
-- MySQL
+DELETE /api/products/{id}: Delete a product by ID.
 
-### Installation
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/your-username/inventory-management-system.git
-    ```
-2. Navigate to the project directory:
-    ```sh
-    cd inventory-management-system
-    ```
-3. Configure the MySQL database in `application.properties`:
-    ```properties
-    spring.datasource.url=jdbc:mysql://localhost:3306/your-database-name
-    spring.datasource.username=your-username
-    spring.datasource.password=your-password
-    spring.jpa.hibernate.ddl-auto=update
-    ```
-    ### Running the Application
-   just run in the intellij
-   ### API Documentation
-- Access the Swagger UI at `http://localhost:8080/swagger-ui.html` for API documentation and testing.
+PUT /api/inventory/{inventoryId}/add: Add stock to a product.
 
-- how to test the application
+PUT /api/inventory/{inventoryId}/deduct: Deduct stock from a product.
 
-- 1) Create a Category
-Request: POST /api/categories
-Body: 
-{
-    "name": "Electronics"
-}
+7. Testing the API with Swagger
+You can test and interact with the API using Swagger UI, which is available at:
 
------------------------------
-2) Get All Categories: 
-Request: GET /api/categories
+bash
+Copy code
+http://localhost:8080/swagger-ui/index.html
+8. Database Schema
+The application expects the following entities in the MySQL database:
 
-------------------------------------
-3) Get a Category by ID:
-id == int
-Request: GET /api/categories/{id}
+Category: Contains product categories (name).
+Product: Stores product information (name, category, and associated inventory).
+Inventory: Contains stock levels for each product.
+Contribution
+If you would like to contribute to the project, feel free to fork the repository, make changes, and submit a pull request.
 
---------------------------------------
-4) Update a Category
-Request: PUT /api/categories/{id}
-Body:
-{
-    "name": "Updated Electronics"
-}
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
---------------------------------------------
-
-5) Delete a Category
-Request: DELETE /api/categories/{id}
-
-
-================== Product Management ================
-
-1) Create a Product
-
-Request: POST /api/products
-Body:
-{
-    "name": "Laptop",
-    "description": "A high-performance laptop",
-    "price": 1200.00,
-    "stockLevel": 100,
-    "categoryId": 1
-}
-
------------------------------
-2) Get All Products
-Request: GET /api/products
-
-------------------------------------
-3) Get a Product by ID
-id == int
-Request: GET /api/products/{id}
-
---------------------------------------
-4) Update a Product
-Request: PUT /api/products/{id}
-Body:
-{
-    "name": "Updated Laptop",
-    "description": "An updated high-performance laptop",
-    "price": 1250.00,
-    "stockLevel": 90,
-    "categoryId": 1
-}
-
-
---------------------------------------------
-5) Delete a Product
-Request: DELETE /api/products/{id}
-
-
-------------------------------------
-6) Filter Products by Category
-Request: GET /api/products/category/{categoryId}
-
---------------------------------------
-7) Search Products by Name
-Request: GET /api/products/search?name={name}
-
---------------------------------------------
-8) Get Low Stock Products
-Request: GET /api/products/low-stock?stockLevel={stockLevel}
-
-================== Inventory Management ================
-
-1) Add Stock to a Product
-
-Request: POST /api/inventory/add/{productId}
-Parameters: quantity
-Example: POST http://localhost:8080/api/inventory/add/1?quantity=10
-
------------------------------
-2) Deduct Stock from a Product
-Request: POST /api/inventory/deduct/{productId}
-Parameters: quantity
-Example:POST http://localhost:8080/api/inventory/deduct/1?quantity=5
-
----------------------------------
-3)Get Stock Level of a Product
-Request: GET /api/inventory/{productId}
-Example: GET http://localhost:8080/api/inventory/1
+This README provides a high-level overview of the project, setup instructions, API endpoints, and testing with Swagger UI. You can expand or modify the sections based on additional requirements or features you add to the project.
